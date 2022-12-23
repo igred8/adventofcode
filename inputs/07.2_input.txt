@@ -1,0 +1,42 @@
+$ cd /
+$ ls
+dir lvl_01
+dir lvl_01.1
+$ cd lvl_01
+$ ls
+100 dgf
+dir lvl_02
+100 jvvl.rcs
+100 rpsjvr.wpb
+100 vjw
+$ cd lvl_02
+$ ls
+dir lvl_03
+$ cd lvl_03
+$ ls
+dir lvl_04
+$ cd lvl_04
+$ ls
+400 lvl_04
+dir lvl_05
+$ cd lvl_05
+$ ls
+dir lvl_06
+$ cd lvl_06
+$ ls
+600 dvbqjq
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd lvl_01.1
+$ ls
+110000 fn_01.1
+dir lvl_02.1
+$ cd lvl_02.1
+$ ls
+210 fn_02.1
+$ cd /
+$ ls
