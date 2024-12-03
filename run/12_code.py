@@ -13,19 +13,17 @@ class PathFinder():
         self.charmap = charmap
         self.altmap = altmap
         self.visitmap = (charmap == 'S')
+        self.travelmap = np.zeros_like(altmap)
         self.start = np.argwhere( self.visitmap )[0]
         self.end = np.argwhere( charmap == 'E' )[0]
 
         self.altmap[charmap =='S'] = alt_start
         self.altmap[charmap =='E'] = alt_end
 
-    def check_position( self, alt_current, alt_check, visit_check):
-        print(f'current: {alt_current}')
-        print(f'check: {alt_check}')
-        print(f'visited? {visit_check}')
-        
-        if not visit_check:
-            if alt_check in [alt_current-1, alt_current, alt_current+1]:
+    def check_position( self, alt_current, alt_temp, visited):
+               
+        if not visited:
+            if alt_temp in [alt_current-1, alt_current, alt_current+1]:
                 return True
             return False
         return False
@@ -41,11 +39,12 @@ class PathFinder():
             if (pos_temp[0]>=0) and (pos_temp[1]>=0):
                 try:
                     alt_current = self.altmap[pos_current[0],pos_current[1]]
-                    # print(alt_current)
+                    print(f'current: pos={pos_current}, altitude={alt_current}')
                     alt_temp = self.altmap[pos_temp[0],pos_temp[1]]
                     visit_temp = self.visitmap[pos_temp[0],pos_temp[1]]
-                    # print(alt_temp)
-                    temp_pos_ok = self.check_position(  alt_current,alt_temp, visit_temp)
+                    print(f'check: pos={pos_temp}, altitude={alt_temp}')
+                    print(f'visited? {visit_temp}')
+                    temp_pos_ok = self.check_position( alt_current, alt_temp, visit_temp )
                     
                     if temp_pos_ok:
                         pos_new = pos_temp.copy()
@@ -63,12 +62,13 @@ class PathFinder():
         pos_current = self.start.copy()
         path = [pos_current]
         i = 0
-        while (not np.all(pos_current == self.end))  :
+        while (not np.all(pos_current == self.end)) and (i<10000) :
             pos_temp, temp_ok = self.move( pos_current )
             if temp_ok:
                 pos_current = pos_temp.copy()
                 path.append( pos_current )
                 self.visitmap[pos_current[0], pos_current[1]] = True
+                self.travelmap[pos_current[0], pos_current[1]] = len(path)
             else:
                 # go back one step in path                
                 pos_current = path.pop()
@@ -104,6 +104,15 @@ if __name__ == "__main__":
     # print(pf.altmap[0,1])
     # pos_new = pf.move(pf.start)
     # print(pos_new)
-    nsteps = pf.pathfind()
-    print(nsteps)
-    print(pf.visitmap)
+    try:
+        nsteps = pf.pathfind()
+        print(nsteps)
+        print(pf.visitmap)
+    except IndexError as err:
+        print(err)
+        
+
+    # pf.altmap = pf.altmap - 26
+    # pf.altmap[pf.visitmap] = 0
+    np.savetxt("E:/Dropbox/py_projects/adventofcode/inputs/12_output.txt", pf.travelmap, fmt='%d', delimiter=' ')
+    np.savetxt("E:/Dropbox/py_projects/adventofcode/inputs/12_output-alt.txt", pf.altmap, fmt='%d', delimiter=' ')
